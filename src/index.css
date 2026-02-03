@@ -1,0 +1,173 @@
+:root {
+  --bg-dark: #060a14;
+  --bg-blue-dark: #0a1220;
+  --bg-blue-mid: #0f1a2e;
+  --bg-card: rgba(15, 28, 50, 0.92);
+  --bg-card-border: rgba(212, 175, 55, 0.35);
+  --accent: #d4af37;
+  --accent-soft: rgba(212, 175, 55, 0.25);
+  --accent-glow: #f0d78c;
+  --gold: #e8c547;
+  --gold-dim: #b8962e;
+  --champagne: #f5e6c8;
+  --text: #f0ebe3;
+  --text-muted: #8fa8c7;
+  --success: #7cb083;
+  --border: rgba(212, 175, 55, 0.4);
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font: 'Outfit', system-ui, sans-serif;
+  --shadow-gold: 0 0 40px rgba(212, 175, 55, 0.25);
+  --radius: 12px;
+  --radius-sm: 10px;
+  --radius-lg: 20px;
+  --blue-glow: rgba(100, 181, 246, 0.6);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font);
+  /* Nền xanh kiểu digital như hình mẫu */
+  background:
+    linear-gradient(180deg, #02101f 0%, #032b52 35%, #054f9d 70%, #02101f 100%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* Glow và mảng sáng chính giữa, như sân khấu LED */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 130% 80% at 50% 0%, rgba(59, 130, 246, 0.4) 0%, transparent 55%),
+    radial-gradient(ellipse 130% 90% at 50% 100%, rgba(5, 99, 193, 0.6) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+  animation: bg-glow-pulse 14s ease-in-out infinite alternate;
+}
+
+/* Các vệt line dọc và đốm sáng mờ – mô phỏng nền tech, không animate */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    /* line dọc */
+    repeating-linear-gradient(
+      to bottom,
+      rgba(56, 189, 248, 0.18),
+      rgba(56, 189, 248, 0.18) 14px,
+      transparent 14px,
+      transparent 42px
+    ),
+    repeating-linear-gradient(
+      to right,
+      rgba(15, 23, 42, 0.3),
+      rgba(15, 23, 42, 0.3) 2px,
+      transparent 2px,
+      transparent 22px
+    ),
+    /* đốm sáng rải rác */
+    radial-gradient(circle at 12% 20%, rgba(191, 219, 254, 0.4) 0%, transparent 45%),
+    radial-gradient(circle at 78% 35%, rgba(125, 211, 252, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 20% 70%, rgba(191, 219, 254, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 85% 80%, rgba(59, 130, 246, 0.5) 0%, transparent 55%);
+  opacity: 0.35;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  z-index: 0;
+  animation: bg-lines-scroll 18s linear infinite;
+}
+
+@keyframes bg-glow-pulse {
+  0% { opacity: 0.65; }
+  50% { opacity: 0.95; }
+  100% { opacity: 0.8; }
+}
+
+@keyframes bg-lines-scroll {
+  0% {
+    background-position:
+      0 0,
+      0 0,
+      0 0,
+      0 0,
+      0 0,
+      0 0;
+  }
+  100% {
+    background-position:
+      0 140px,
+      0 0,
+      0 0,
+      0 0,
+      0 0,
+      0 0;
+  }
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  height: 100vh;
+  padding: 0;
+  overflow: hidden;
+}
+
+.bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 700px) {
+  #root {
+    height: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+button {
+  font-family: var(--font);
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+input, select {
+  font-family: var(--font);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  padding: 0.55rem 0.85rem;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+input:hover, select:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+  background: rgba(255, 255, 255, 0.08);
+}

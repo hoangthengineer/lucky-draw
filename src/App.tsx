@@ -99,6 +99,11 @@ function App() {
     setHistory(() => [])
   }, [setHistory])
 
+  // Ẩn những người đã trúng giải khỏi danh sách người chơi
+  const visibleParticipants = state.participants.filter(
+    (p) => !state.history.some((h) => h.participantId === p.id)
+  )
+
   return (
     <>
       <BackgroundCanvas />
@@ -156,7 +161,7 @@ function App() {
           <History records={state.history} prizes={state.prizes} onClear={onClearHistory} />
           {showParticipants && (
             <ParticipantList
-              participants={state.participants}
+              participants={visibleParticipants}
               onRemove={onRemoveParticipant}
               onImport={onImportParticipants}
             />

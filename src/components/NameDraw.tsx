@@ -29,6 +29,7 @@ export default function NameDraw({ prizes, participants, history, onDraw, disabl
   const [displayName, setDisplayName] = useState<string>('')
   const [result, setResult] = useState<{ name: string; code?: string; prizeName: string; displayNumber: number; phone?: string } | null>(null)
   const [confetti, setConfetti] = useState<{ id: number; left: number; color: string; delay: number }[]>([])
+  const [fireworksActive, setFireworksActive] = useState(false)
   const shuffleRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const selectedPrize = prizes.find((p) => p.id === selectedPrizeId)
@@ -46,7 +47,11 @@ export default function NameDraw({ prizes, participants, history, onDraw, disabl
       delay: Math.random() * 0.3,
     }))
     setConfetti(items)
-    setTimeout(() => setConfetti([]), 2000)
+    setFireworksActive(true)
+    setTimeout(() => {
+      setConfetti([])
+      setFireworksActive(false)
+    }, 2200)
   }, [])
 
   const draw = useCallback(() => {
@@ -114,10 +119,12 @@ export default function NameDraw({ prizes, participants, history, onDraw, disabl
   const placeholder = result ? '' : drawing ? '' : 'Chọn giải & nhấn Quay'
   const isPlaceholder = !displayName && !result && !drawing
   const marqueeText = result
-    ? `${(result.code || String(result.displayNumber)).toUpperCase()} - ${result.name.toUpperCase()}`
+    ? ''
     : drawing
       ? displayName
       : placeholder
+  const winnerCodeLabel = result ? (result.code || String(result.displayNumber)).toUpperCase() : ''
+  const winnerNameLabel = result ? result.name.toUpperCase() : ''
   const prizeLabel = selectedPrize ? selectedPrize.name.toUpperCase() : ''
   const hasWinner = !!result
 
@@ -129,11 +136,26 @@ export default function NameDraw({ prizes, participants, history, onDraw, disabl
           <div className="name-draw-inner">
             <div className="name-draw-prize-label">{prizeLabel}</div>
             <div className="name-draw-main">
-              <span
-                className={`name-draw-text ${drawing ? 'name-draw-shuffle' : ''} ${result ? 'name-draw-winner' : ''} ${isPlaceholder ? 'name-draw-placeholder' : ''}`}
-              >
-                {marqueeText}
-              </span>
+              {result ? (
+                <div className="name-draw-winner-block">
+                  <div className="name-draw-winner-code-row">
+                    <span className="name-draw-winner-code">
+                      {winnerCodeLabel}
+                    </span>
+                  </div>
+                  <div className="name-draw-winner-name-row">
+                    <span className="name-draw-text name-draw-winner">
+                      {winnerNameLabel}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <span
+                  className={`name-draw-text ${drawing ? 'name-draw-shuffle' : ''} ${isPlaceholder ? 'name-draw-placeholder' : ''}`}
+                >
+                  {marqueeText}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -157,11 +179,25 @@ export default function NameDraw({ prizes, participants, history, onDraw, disabl
         </button>
       </div>
 
-      {confetti.length > 0 && (
+      {(confetti.length > 0 || fireworksActive) && (
         <div className="confetti-wrap">
           {confetti.map((c) => (
-            <div key={c.id} className="confetti" style={{ left: `${c.left}%`, background: c.color, animationDelay: `${c.delay}s` }} />
+            <div
+              key={c.id}
+              className="confetti"
+              style={{ left: `${c.left}%`, background: c.color, animationDelay: `${c.delay}s` }}
+            />
           ))}
+
+          {fireworksActive && (
+            <div className="winner-fireworks" aria-hidden>
+              <div className="firework firework-1" />
+              <div className="firework firework-2" />
+              <div className="firework firework-3" />
+              <div className="firework firework-4" />
+              <div className="firework firework-5" />
+            </div>
+          )}
         </div>
       )}
     </div>

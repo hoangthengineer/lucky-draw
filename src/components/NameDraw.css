@@ -163,6 +163,7 @@
 }
 
 .name-draw-text.name-draw-winner {
+  font-family: var(--font-vn);
   color: #ffc107;
   font-size: clamp(2rem, 5.6vw, 3.9rem);
   font-weight: 800;
@@ -415,7 +416,7 @@
 }
 
 .result-popup-name {
-  font-family: var(--font-display);
+  font-family: var(--font-vn);
   font-size: clamp(1.5rem, 5vw, 3rem);
   font-weight: 800;
   color: var(--gold);

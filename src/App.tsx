@@ -65,10 +65,6 @@ function App() {
     setState((s) => ({ ...s, history: fn(s.history) }))
   }, [])
 
-  const onAddParticipant = useCallback((p: Participant) => {
-    setParticipants((prev) => [...prev, p])
-  }, [setParticipants])
-
   const onRemoveParticipant = useCallback((id: string) => {
     setParticipants((prev) => prev.filter((x) => x.id !== id))
   }, [setParticipants])
@@ -161,7 +157,6 @@ function App() {
           {showParticipants && (
             <ParticipantList
               participants={state.participants}
-              onAdd={onAddParticipant}
               onRemove={onRemoveParticipant}
               onImport={onImportParticipants}
             />

@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import type { ChangeEvent } from 'react'
 import * as XLSX from 'xlsx'
 import type { Participant } from '../types'
 import { addParticipant as createParticipant } from '../storage'
@@ -6,25 +7,14 @@ import './ParticipantList.css'
 
 interface ParticipantListProps {
   participants: Participant[]
-  onAdd: (p: Participant) => void
   onRemove: (id: string) => void
   onImport: (list: Participant[]) => void
 }
 
-export default function ParticipantList({ participants, onAdd, onRemove, onImport }: ParticipantListProps) {
-  const nameRef = useRef<HTMLInputElement>(null)
+export default function ParticipantList({ participants, onRemove, onImport }: ParticipantListProps) {
   const fileRef = useRef<HTMLInputElement>(null)
 
-  const handleAdd = () => {
-    const name = nameRef.current?.value?.trim()
-    if (!name) return
-    const p = createParticipant({ name })
-    onAdd(p)
-    nameRef.current!.value = ''
-    nameRef.current?.focus()
-  }
-
-  const handleImportExcel = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportExcel = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
@@ -85,15 +75,6 @@ export default function ParticipantList({ participants, onAdd, onRemove, onImpor
         />
       </div>
       <p className="import-hint">Excel: Mã nhân viên, Họ tên.</p>
-      <div className="participant-add">
-        <input
-          ref={nameRef}
-          type="text"
-          placeholder="Nhập họ tên người chơi"
-          onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-        />
-        <button type="button" onClick={handleAdd}>Thêm</button>
-      </div>
       <div className="participant-list">
         {participants.map((p) => (
           <div key={p.id} className="participant-item">

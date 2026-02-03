@@ -4,14 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lucky Draw</title>
+    <!-- Vite sẽ tự thêm base /lucky-draw/ khi build, nên để đường dẫn favicon tương đối gốc -->
     <link rel="icon" type="image/svg+xml" href="/lucky-draw/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/lucky-draw/assets/index--Vpfl9HX.js"></script>
-    <link rel="stylesheet" crossorigin href="/lucky-draw/assets/index-Cehg2P-M.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Thêm font hỗ trợ tiếng Việt tốt (Be Vietnam Pro) -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Outfit:wght@400;500;600;700&display=swap&subset=vietnamese"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="/lucky-draw/assets/index-CAQ-qWmv.js"></script>
+    <link rel="stylesheet" crossorigin href="/lucky-draw/assets/index-CaFsTTEe.css">
   </head>
   <body>
     <div id="root"></div>
+    <!-- File entry cho Vite (dev & build), KHÔNG trỏ vào file trong dist -->
   </body>
 </html>

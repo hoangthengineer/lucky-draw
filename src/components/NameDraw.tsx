@@ -18,10 +18,75 @@ interface NameDrawProps {
   disabled?: boolean
 }
 
-// Thời gian quay lâu hơn cho kịch tính (~7 giây)
-const SHUFFLE_DURATION = 7000
+// Thời gian quay 10 giây
+const SHUFFLE_DURATION = 10000
 // Tốc độ đổi tên nhanh hơn một chút
 const SHUFFLE_INTERVAL = 90
+
+const BASE = import.meta.env.BASE_URL
+const SPIN_FADE_OUT = 0.3
+
+/** Phát nhạc quay; trả về hàm để tắt mượt (fade out) khi win */
+function playSpinSound(): Promise<() => void> {
+  const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+  if (!Ctx) {
+    const audio = new Audio(`${BASE}sounds/spin.mp3`)
+    audio.volume = 1
+    audio.play().catch(() => playSpinBeep())
+    return Promise.resolve(() => {
+      audio.pause()
+      audio.currentTime = 0
+    })
+  }
+  const ctx = new Ctx()
+  return fetch(`${BASE}sounds/spin.mp3`)
+    .then((r) => r.arrayBuffer())
+    .then((buf) => ctx.decodeAudioData(buf))
+    .then((buffer) => {
+      const source = ctx.createBufferSource()
+      const gain = ctx.createGain()
+      source.buffer = buffer
+      source.connect(gain)
+      gain.connect(ctx.destination)
+      gain.gain.setValueAtTime(1, ctx.currentTime)
+      source.start(0)
+      const stopSpin = () => {
+        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + SPIN_FADE_OUT)
+        source.stop(ctx.currentTime + SPIN_FADE_OUT)
+      }
+      return stopSpin
+    })
+    .catch(() => {
+      new Audio(`${BASE}sounds/spin.mp3`).play().catch(() => playSpinBeep())
+      return () => {}
+    })
+}
+
+function playWinSound() {
+  const audio = new Audio(`${BASE}sounds/win.mp3`)
+  audio.volume = 1
+  audio.play().catch(() => {})
+}
+
+function playSpinBeep() {
+  try {
+    const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+    if (!Ctx) return
+    const ctx = new Ctx()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.frequency.value = 520
+    osc.type = 'sine'
+    gain.gain.setValueAtTime(0.12, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2)
+    osc.start(ctx.currentTime)
+    osc.stop(ctx.currentTime + 0.2)
+  } catch {
+    // ignore
+  }
+}
 
 export default function NameDraw({ prizes, participants, history, onDraw, disabled }: NameDrawProps) {
   const [selectedPrizeId, setSelectedPrizeId] = useState<string>(prizes[0]?.id ?? '')
@@ -31,6 +96,7 @@ export default function NameDraw({ prizes, participants, history, onDraw, disabl
   const [confetti, setConfetti] = useState<{ id: number; left: number; color: string; delay: number }[]>([])
   const [fireworksActive, setFireworksActive] = useState(false)
   const shuffleRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const stopSpinRef = useRef<(() => void) | null>(null)
 
   const selectedPrize = prizes.find((p) => p.id === selectedPrizeId)
   const availableParticipants = getDrawPool(participants, history)
@@ -66,6 +132,10 @@ export default function NameDraw({ prizes, participants, history, onDraw, disabl
     if (shuffleRef.current) clearInterval(shuffleRef.current)
     setDrawing(true)
     setResult(null)
+    stopSpinRef.current = null
+    playSpinSound().then((stopSpin) => {
+      stopSpinRef.current = stopSpin
+    })
 
     let elapsed = 0
     shuffleRef.current = setInterval(() => {
@@ -78,6 +148,8 @@ export default function NameDraw({ prizes, participants, history, onDraw, disabl
       if (elapsed >= SHUFFLE_DURATION) {
         if (shuffleRef.current) clearInterval(shuffleRef.current)
         shuffleRef.current = null
+        stopSpinRef.current?.()
+        stopSpinRef.current = null
         const winnerLabel = winner.code
           ? `${winner.code} - ${winner.name}`
           : winner.name
@@ -99,6 +171,7 @@ export default function NameDraw({ prizes, participants, history, onDraw, disabl
           participantPhone: winner.phone,
           drawnAt: Date.now(),
         })
+        setTimeout(() => playWinSound(), 100)
         addConfetti()
       }
     }, SHUFFLE_INTERVAL)

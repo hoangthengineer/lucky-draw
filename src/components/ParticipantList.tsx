@@ -84,7 +84,7 @@ export default function ParticipantList({ participants, onAdd, onRemove, onImpor
           onChange={handleImportExcel}
         />
       </div>
-      <p className="import-hint">Excel: Mã nhân viên, Họ tên (2 cột). Có thể kèm thêm SĐT, Email.</p>
+      <p className="import-hint">Excel: Mã nhân viên, Họ tên.</p>
       <div className="participant-add">
         <input
           ref={nameRef}

@@ -192,14 +192,14 @@ export default function NameDraw({ prizes, participants, history, onDraw, disabl
 
     const prize = selectedPrize
     const winner = pool[Math.floor(Math.random() * pool.length)]
-    if (shuffleRef.current) clearTimeout(shuffleRef.current)
-    setDrawing(true)
-    setResult(null)
     spinSoundRef.current = null
     shuffleStartRef.current = performance.now()
     playSpinSound().then((controls) => {
       spinSoundRef.current = controls
     })
+    if (shuffleRef.current) clearTimeout(shuffleRef.current)
+    setDrawing(true)
+    setResult(null)
 
     function tick() {
       const elapsed = performance.now() - shuffleStartRef.current

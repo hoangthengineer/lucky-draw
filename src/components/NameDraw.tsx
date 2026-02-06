@@ -35,6 +35,8 @@ function getShuffleIntervalMs(elapsedMs: number): number {
 
 const BASE = import.meta.env.BASE_URL
 const SPIN_FADE_OUT = 0.3
+/** Bỏ qua N giây đầu của nhạc quay khi bấm Quay */
+const SPIN_SOUND_START_OFFSET = 1.5
 
 /** Tốc độ nhạc: interval nhỏ (quay nhanh) → rate cao, interval lớn (quay chậm) → rate thấp. Clamp [0.6, 2]. */
 function playbackRateFromIntervalMs(intervalMs: number): number {
@@ -53,6 +55,7 @@ function playSpinSound(): Promise<SpinSoundControls> {
   if (!Ctx) {
     const audio = new Audio(`${BASE}sounds/spin.mp3`)
     audio.volume = 1
+    audio.currentTime = SPIN_SOUND_START_OFFSET
     audio.play().catch(() => playSpinBeep())
     return Promise.resolve({
       stop: () => {
@@ -76,7 +79,7 @@ function playSpinSound(): Promise<SpinSoundControls> {
       gain.connect(ctx.destination)
       gain.gain.setValueAtTime(1, ctx.currentTime)
       source.playbackRate.setValueAtTime(playbackRateFromIntervalMs(INTERVAL_SLOW_MS), ctx.currentTime)
-      source.start(0)
+      source.start(0, SPIN_SOUND_START_OFFSET)
       const stopSpin = () => {
         gain.gain.linearRampToValueAtTime(0, ctx.currentTime + SPIN_FADE_OUT)
         source.stop(ctx.currentTime + SPIN_FADE_OUT)

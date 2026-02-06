@@ -7,11 +7,13 @@ import './ParticipantList.css'
 
 interface ParticipantListProps {
   participants: Participant[]
+  participantTotalCount: number
   onRemove: (id: string) => void
   onImport: (list: Participant[]) => void
+  onRemoveAll: () => void
 }
 
-export default function ParticipantList({ participants, onRemove, onImport }: ParticipantListProps) {
+export default function ParticipantList({ participants, participantTotalCount, onRemove, onImport, onRemoveAll }: ParticipantListProps) {
   const fileRef = useRef<HTMLInputElement>(null)
 
   const handleImportExcel = (e: ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +34,7 @@ export default function ParticipantList({ participants, onRemove, onImport }: Pa
           h.includes('tên') || h.includes('name') || h === 'họ tên' || h === 'hoten'
         )
         const codeCol = header.findIndex((h) =>
-          h.includes('mã') || h.includes('code') || h.includes('id')
+          h.includes('mã') || h.includes('code') || h.includes('id') || h === 'mnv'
         )
         const phoneCol = header.findIndex((h) => h.includes('điện thoại') || h.includes('phone') || h === 'sdt')
         const emailCol = header.findIndex((h) => h.includes('email'))
@@ -64,8 +66,13 @@ export default function ParticipantList({ participants, onRemove, onImport }: Pa
       <div className="participant-count">Tổng số: {participants.length}</div>
       <div className="participant-toolbar">
         <button type="button" className="btn-import" onClick={() => fileRef.current?.click()}>
-          📂 Import từ Excel
+          📂 Import
         </button>
+        {participantTotalCount > 0 && (
+          <button type="button" className="btn-remove-all" onClick={onRemoveAll}>
+            🗑 Xóa tất cả
+          </button>
+        )}
         <input
           ref={fileRef}
           type="file"
@@ -74,7 +81,7 @@ export default function ParticipantList({ participants, onRemove, onImport }: Pa
           onChange={handleImportExcel}
         />
       </div>
-      <p className="import-hint">Excel: Mã nhân viên, Họ tên.</p>
+      <p className="import-hint">Excel: cột MNV (mã), Họ và tên.</p>
       <div className="participant-list">
         {participants.map((p) => (
           <div key={p.id} className="participant-item">

@@ -258,10 +258,10 @@
 .section-side {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 0.75rem;
   min-height: 0;
   overflow-y: auto;
-  padding: 0;
+  padding: 0.75rem 0.75rem 1rem;
   border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 

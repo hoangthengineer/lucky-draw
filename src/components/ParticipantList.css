@@ -1,4 +1,8 @@
 .participant-manager {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 0 1 auto;
   background: var(--bg-card);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -29,6 +33,7 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 0.75rem;
+  flex-shrink: 0;
 }
 
 .btn-import {
@@ -44,6 +49,21 @@
 .btn-import:hover {
   background: rgba(124, 176, 131, 0.3);
   box-shadow: 0 2px 12px rgba(124, 176, 131, 0.2);
+}
+
+.btn-remove-all {
+  padding: 0.55rem 1rem;
+  font-size: 0.85rem;
+  background: rgba(200, 100, 100, 0.2);
+  color: #e88;
+  border: 1px solid rgba(200, 100, 100, 0.4);
+  border-radius: var(--radius);
+  font-weight: 600;
+}
+
+.btn-remove-all:hover {
+  background: rgba(200, 100, 100, 0.35);
+  box-shadow: 0 2px 12px rgba(200, 100, 100, 0.2);
 }
 
 .input-file {
@@ -84,6 +104,8 @@
 }
 
 .participant-list {
+  flex: 1;
+  min-height: 0;
   max-height: 280px;
   overflow-y: auto;
   display: flex;

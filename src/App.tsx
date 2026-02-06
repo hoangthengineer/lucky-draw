@@ -73,6 +73,10 @@ function App() {
     setParticipants((prev) => [...prev, ...list])
   }, [setParticipants])
 
+  const onRemoveAllParticipants = useCallback(() => {
+    setParticipants(() => [])
+  }, [setParticipants])
+
   const onAddPrize = useCallback((p: Omit<Prize, 'id'>) => {
     const newP: Prize = { ...p, id: `prize-${Date.now()}-${Math.random().toString(36).slice(2, 9)}` }
     setPrizes((prev) => [...prev, newP].sort((a, b) => a.order - b.order))
@@ -162,8 +166,10 @@ function App() {
           {showParticipants && (
             <ParticipantList
               participants={visibleParticipants}
+              participantTotalCount={state.participants.length}
               onRemove={onRemoveParticipant}
               onImport={onImportParticipants}
+              onRemoveAll={onRemoveAllParticipants}
             />
           )}
           {showPrizes && (

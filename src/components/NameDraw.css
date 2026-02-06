@@ -21,7 +21,7 @@
   align-items: center;
   justify-content: center;
   padding: clamp(1rem, 3vh, 1.75rem) 0;
-  width: calc(100% + 380px);
+  width: calc(100% + 350px);
   margin-left: -40px;
   margin-right: -40px;
   flex: 1;
@@ -30,11 +30,7 @@
 }
 
 .name-draw-stage::before {
-  content: '';
-  position: absolute;
-  inset: -15%;
-  background: radial-gradient(ellipse 60% 45% at 50% 50%, rgba(255, 213, 79, 0.06) 0%, transparent 60%);
-  pointer-events: none;
+  content: none;
 }
 
 /* ----- Marquee (không vỡ màu: nền đồng nhất) ----- */
@@ -107,7 +103,6 @@
   border-radius: 18px;
   pointer-events: none;
   border: 2px solid rgba(255, 213, 79, 0.4);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 .name-draw-inner {
@@ -123,9 +118,7 @@
   border-radius: 17px;
   margin: 0;
   text-align: center;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
 .name-draw-prize-label {
@@ -272,12 +265,40 @@
   }
 }
 
+.name-draw-shuffle-wrap {
+  position: relative;
+  width: 100%;
+  min-height: 2.2em;
+  /* overflow: hidden; */
+}
+
+.name-draw-shuffle-wrap .name-draw-shuffle-slot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(0.35em);
+  transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.name-draw-shuffle-wrap .name-draw-shuffle-slot.name-draw-shuffle-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  z-index: 1;
+}
+
 .name-draw-text.name-draw-shuffle {
   color: #ffd54f;
-  text-shadow:
-    0 0 16px rgba(255, 243, 176, 0.7),
-    0 0 32px rgba(56, 189, 248, 0.4);
-  animation: shuffle-deep 0.22s ease-in-out infinite;
+  text-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
 }
 
 .name-draw-text.name-draw-placeholder {
